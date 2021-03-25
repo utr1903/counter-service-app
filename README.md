@@ -44,13 +44,15 @@ The app is run through the main.go file. Both the database username and password
   * Linux: cd $GOPATH/github.com/utr1903/counter-service-app
   * Windows: cd %GOPATH%\github.com\utr1903\counter-service-app
 * type _go install_
-* type _go run main.go "username" "password"
+* type _go run main.go "username" "password"_
 
 ### 5.1 main.go
-Simply the start of the application. It parses the database username and password. Creates an app object.
+Simply the start of the application. It parses the database username and password. Creates an app object and runs it.
 
 ### 5.2 app
 The folder contains only app.go which creates the server and handles the requests. This is the place where the database connection is established and the API endpoints are defined.
+
+If the necessary table (in this case "counter" table) is not created, this routine automatically creates one and initialzes with a dummy id (1) and a counter (default = 0).
 
 ### 5.3 controllers
 For this particular application, only one controller is created which is CounterController.go. This extends ControllerBase where primitive methods are defined (parsing request and creating response). The requests land to the CounterController and forwarded to CounterService.
