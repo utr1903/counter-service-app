@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/utr1903/counter-service-app/services/counterservice/models"
 )
 
 // CounterService : Implementation of CounterService
@@ -15,7 +17,7 @@ type CounterService struct {
 }
 
 // GetCounter : Returns the current value of counter
-func (s *CounterService) GetCounter() (*int, int, error) {
+func (s *CounterService) GetCounter() *models.CounterResponse {
 
 	q := "select counter from counterdb.counter where id = 1"
 
@@ -25,10 +27,11 @@ func (s *CounterService) GetCounter() (*int, int, error) {
 	err := row.Scan(&counter)
 
 	if err != nil {
-		return nil, http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 
-	return counter, http.StatusOK, nil
+	result := createResponse(counter, http.StatusOK, nil)
+	return result
 }
 
 // IncreaseCounter : Increases the counter by given number
@@ -51,12 +54,12 @@ func (s *CounterService) IncreaseCounter(dto *string) (int, error) {
 
 	res, err := stmt.ExecContext(ctx, increment)
 	if err != nil {
-		return 500, err
+		return http.StatusInternalServerError, err
 	}
 
 	numRows, err := res.RowsAffected()
 	if numRows != 1 || err != nil {
-		return 500, err
+		return http.StatusInternalServerError, err
 	}
 
 	return http.StatusOK, nil
@@ -117,4 +120,14 @@ func (s *CounterService) ResetCounter() (int, error) {
 	}
 
 	return http.StatusOK, err
+}
+
+func createResponse(counter *int, code int, err error) *models.CounterResponse {
+	result := &models.CounterResponse{
+		Counter: counter,
+		Code:    code,
+		Error:   err,
+	}
+
+	return result
 }

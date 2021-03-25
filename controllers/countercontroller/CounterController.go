@@ -21,17 +21,19 @@ func (c *CounterController) GetCounter(w http.ResponseWriter, r *http.Request) {
 		Db:  c.Base.Db,
 	}
 
-	counter, code, err := s.GetCounter()
+	response := s.GetCounter()
 
-	if err != nil {
-		if code == http.StatusBadRequest {
-			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
-		} else if code == http.StatusInternalServerError {
-			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+	if response.Error != nil {
+		if response.Code == http.StatusBadRequest {
+			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&response.Error))
+			return
+		} else if response.Code == http.StatusInternalServerError {
+			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&response.Error))
+			return
 		}
 	}
 
-	result := commons.Success(counter, nil)
+	result := commons.Success(response.Counter, nil)
 	c.Base.CreateResponse(&w, http.StatusOK, result)
 }
 
@@ -50,8 +52,10 @@ func (c *CounterController) IncreaseCounter(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		if code == http.StatusBadRequest {
 			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+			return
 		} else if code == http.StatusInternalServerError {
 			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+			return
 		}
 	}
 
@@ -74,8 +78,10 @@ func (c *CounterController) DecreaseCounter(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		if code == http.StatusBadRequest {
 			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+			return
 		} else if code == http.StatusInternalServerError {
 			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+			return
 		}
 	}
 
@@ -96,8 +102,10 @@ func (c *CounterController) ResetCounter(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		if code == http.StatusBadRequest {
 			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+			return
 		} else if code == http.StatusInternalServerError {
 			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+			return
 		}
 	}
 
