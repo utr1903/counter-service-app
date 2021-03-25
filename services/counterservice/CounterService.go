@@ -35,11 +35,11 @@ func (s *CounterService) GetCounter() *models.CounterResponse {
 }
 
 // IncreaseCounter : Increases the counter by given number
-func (s *CounterService) IncreaseCounter(dto *string) (int, error) {
+func (s *CounterService) IncreaseCounter(dto *string) *models.CounterResponse {
 
 	increment, err := strconv.Atoi(*dto)
 	if err != nil {
-		return http.StatusBadRequest, err
+		return createResponse(nil, http.StatusBadRequest, err)
 	}
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
@@ -48,29 +48,29 @@ func (s *CounterService) IncreaseCounter(dto *string) (int, error) {
 	q := "update counter set counter = counter + ? where id = 1"
 	stmt, err := s.Db.PrepareContext(ctx, q)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 	defer stmt.Close()
 
 	res, err := stmt.ExecContext(ctx, increment)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 
 	numRows, err := res.RowsAffected()
 	if numRows != 1 || err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 
-	return http.StatusOK, nil
+	return s.GetCounter()
 }
 
 // DecreaseCounter : Decreases the counter by given number
-func (s *CounterService) DecreaseCounter(dto *string) (int, error) {
+func (s *CounterService) DecreaseCounter(dto *string) *models.CounterResponse {
 
 	decrement, err := strconv.Atoi(*dto)
 	if err != nil {
-		return http.StatusBadRequest, err
+		return createResponse(nil, http.StatusBadRequest, err)
 	}
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
@@ -79,25 +79,25 @@ func (s *CounterService) DecreaseCounter(dto *string) (int, error) {
 	q := "update counter set counter = counter - ? where id = 1"
 	stmt, err := s.Db.PrepareContext(ctx, q)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 	defer stmt.Close()
 
 	res, err := stmt.ExecContext(ctx, decrement)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 
 	numRows, err := res.RowsAffected()
 	if numRows != 1 || err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 
-	return http.StatusOK, nil
+	return s.GetCounter()
 }
 
 // ResetCounter : Resets the counter to zero
-func (s *CounterService) ResetCounter() (int, error) {
+func (s *CounterService) ResetCounter() *models.CounterResponse {
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
@@ -105,21 +105,22 @@ func (s *CounterService) ResetCounter() (int, error) {
 	q := "update counter set counter = 0 where id = 1"
 	stmt, err := s.Db.PrepareContext(ctx, q)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 	defer stmt.Close()
 
 	res, err := stmt.ExecContext(ctx)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 
 	numRows, err := res.RowsAffected()
 	if numRows != 1 || err != nil {
-		return http.StatusInternalServerError, err
+		return createResponse(nil, http.StatusInternalServerError, err)
 	}
 
-	return http.StatusOK, err
+	ctr := 0
+	return createResponse(&ctr, http.StatusOK, nil)
 }
 
 func createResponse(counter *int, code int, err error) *models.CounterResponse {

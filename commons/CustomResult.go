@@ -14,8 +14,8 @@ func Success(data interface{}, err error) *CustomResult {
 	return &CustomResult{
 		Success: true,
 		Model:   data,
-		Code:    "",
-		Message: "",
+		Code:    "OK",
+		Message: "Request successfully processed",
 		Error:   nil,
 	}
 }

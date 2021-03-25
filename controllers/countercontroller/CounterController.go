@@ -47,19 +47,19 @@ func (c *CounterController) IncreaseCounter(w http.ResponseWriter, r *http.Reque
 		Db:  c.Base.Db,
 	}
 
-	code, err := s.IncreaseCounter(dto)
+	response := s.IncreaseCounter(dto)
 
-	if err != nil {
-		if code == http.StatusBadRequest {
-			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+	if response.Error != nil {
+		if response.Code == http.StatusBadRequest {
+			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&response.Error))
 			return
-		} else if code == http.StatusInternalServerError {
-			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+		} else if response.Code == http.StatusInternalServerError {
+			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&response.Error))
 			return
 		}
 	}
 
-	result := commons.Success(nil, nil)
+	result := commons.Success(response.Counter, response.Error)
 	c.Base.CreateResponse(&w, http.StatusOK, result)
 }
 
@@ -73,19 +73,19 @@ func (c *CounterController) DecreaseCounter(w http.ResponseWriter, r *http.Reque
 		Db:  c.Base.Db,
 	}
 
-	code, err := s.DecreaseCounter(dto)
+	response := s.DecreaseCounter(dto)
 
-	if err != nil {
-		if code == http.StatusBadRequest {
-			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+	if response.Error != nil {
+		if response.Code == http.StatusBadRequest {
+			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&response.Error))
 			return
-		} else if code == http.StatusInternalServerError {
-			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+		} else if response.Code == http.StatusInternalServerError {
+			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&response.Error))
 			return
 		}
 	}
 
-	result := commons.Success(nil, nil)
+	result := commons.Success(response.Counter, response.Error)
 	c.Base.CreateResponse(&w, http.StatusOK, result)
 }
 
@@ -97,18 +97,18 @@ func (c *CounterController) ResetCounter(w http.ResponseWriter, r *http.Request)
 		Db:  c.Base.Db,
 	}
 
-	code, err := s.ResetCounter()
+	response := s.ResetCounter()
 
-	if err != nil {
-		if code == http.StatusBadRequest {
-			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+	if response.Error != nil {
+		if response.Code == http.StatusBadRequest {
+			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&response.Error))
 			return
-		} else if code == http.StatusInternalServerError {
-			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+		} else if response.Code == http.StatusInternalServerError {
+			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&response.Error))
 			return
 		}
 	}
 
-	result := commons.Success(nil, nil)
+	result := commons.Success(response.Counter, response.Error)
 	c.Base.CreateResponse(&w, http.StatusOK, result)
 }
