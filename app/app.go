@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	// mysql import
@@ -22,14 +23,19 @@ type App struct {
 }
 
 // InitDb : Initializes the Db connection
-func (a *App) InitDb() {
-	db, err := sql.Open("mysql", "utr1903:utr1903@(127.0.0.1:3306)/counterdb?parseTime=true")
+func (a *App) InitDb(dbUser *string, dbPass *string) {
+
+	connectionString := *dbUser + ":" + *dbPass + "@(127.0.0.1:3306)/counterdb?parseTime=true"
+
+	db, err := sql.Open("mysql", connectionString)
 	a.Db = db
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error by database initialization", err)
+		os.Exit(1)
 	}
 	if err := db.Ping(); err != nil {
-		log.Fatal(err)
+		log.Fatal("Error by database connection", err)
+		os.Exit(1)
 	}
 
 	a.createTableIfNotExists()
@@ -52,15 +58,6 @@ func (a *App) createTableIfNotExists() error {
 	if _, err := a.Db.ExecContext(ctx, q); err != nil {
 		return err
 	}
-
-	// res, err := a.Db.ExecContext(ctx, q)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// if _, err := res.RowsAffected(); err != nil {
-	// 	return err
-	// }
 
 	return nil
 }
