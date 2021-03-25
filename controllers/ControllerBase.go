@@ -19,7 +19,7 @@ func (c *ControllerBase) ParseRequestToString(w *http.ResponseWriter, r *http.Re
 
 	dto, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		c.CreateResponse(w, http.StatusBadRequest, commons.RequestNotValid())
+		c.CreateResponse(w, http.StatusBadRequest, commons.BadRequest(&err))
 		return nil
 	}
 	defer r.Body.Close()

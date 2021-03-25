@@ -20,10 +20,15 @@ func (c *CounterController) GetCounter(w http.ResponseWriter, r *http.Request) {
 		Req: r,
 		Db:  c.Base.Db,
 	}
-	counter, err := s.GetCounter()
+
+	counter, code, err := s.GetCounter()
 
 	if err != nil {
-		c.Base.CreateResponse(&w, http.StatusBadRequest, nil)
+		if code == http.StatusBadRequest {
+			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+		} else if code == http.StatusInternalServerError {
+			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+		}
 	}
 
 	result := commons.Success(counter, nil)
@@ -40,10 +45,14 @@ func (c *CounterController) IncreaseCounter(w http.ResponseWriter, r *http.Reque
 		Db:  c.Base.Db,
 	}
 
-	err := s.IncreaseCounter(dto)
+	code, err := s.IncreaseCounter(dto)
 
 	if err != nil {
-		c.Base.CreateResponse(&w, http.StatusBadRequest, nil)
+		if code == http.StatusBadRequest {
+			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+		} else if code == http.StatusInternalServerError {
+			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+		}
 	}
 
 	result := commons.Success(nil, nil)
@@ -60,10 +69,14 @@ func (c *CounterController) DecreaseCounter(w http.ResponseWriter, r *http.Reque
 		Db:  c.Base.Db,
 	}
 
-	err := s.DecreaseCounter(dto)
+	code, err := s.DecreaseCounter(dto)
 
 	if err != nil {
-		c.Base.CreateResponse(&w, http.StatusBadRequest, nil)
+		if code == http.StatusBadRequest {
+			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+		} else if code == http.StatusInternalServerError {
+			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+		}
 	}
 
 	result := commons.Success(nil, nil)
@@ -78,10 +91,14 @@ func (c *CounterController) ResetCounter(w http.ResponseWriter, r *http.Request)
 		Db:  c.Base.Db,
 	}
 
-	err := s.ResetCounter()
+	code, err := s.ResetCounter()
 
 	if err != nil {
-		c.Base.CreateResponse(&w, http.StatusBadRequest, nil)
+		if code == http.StatusBadRequest {
+			c.Base.CreateResponse(&w, http.StatusBadRequest, commons.BadRequest(&err))
+		} else if code == http.StatusInternalServerError {
+			c.Base.CreateResponse(&w, http.StatusInternalServerError, commons.InternalServerError(&err))
+		}
 	}
 
 	result := commons.Success(nil, nil)

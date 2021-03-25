@@ -20,17 +20,24 @@ func Success(data interface{}, err error) *CustomResult {
 	}
 }
 
-// --- Not Valid Exceptions ---
-
-// RequestNotValid : Request structure is not in desired format
-func RequestNotValid() *CustomResult {
+// BadRequest : Request structure is not in desired format
+func BadRequest(err *error) *CustomResult {
 	return &CustomResult{
 		Success: false,
 		Model:   nil,
-		Code:    "RequestNotValid",
+		Code:    "BadRequest",
 		Message: "Request structure not valid!",
-		Error:   nil,
+		Error:   err,
 	}
 }
 
-// ----------------------------
+// InternalServerError : An internal failure is occured
+func InternalServerError(err *error) *CustomResult {
+	return &CustomResult{
+		Success: false,
+		Model:   nil,
+		Code:    "InternalServerError",
+		Message: "Internal server error occured!",
+		Error:   err,
+	}
+}
