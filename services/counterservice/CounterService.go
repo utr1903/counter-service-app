@@ -3,8 +3,8 @@ package counterservice
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -17,11 +17,11 @@ type CounterService struct {
 // GetCounter : Returns the current value of counter
 func (s *CounterService) GetCounter() (*int, error) {
 
-	q := "select counter from counter where id = 1"
+	q := "select counter from counterdb.counter where id = 1"
 
 	var counter *int = nil
 
-	row := s.Db.QueryRow(q, "counter")
+	row := s.Db.QueryRow(q)
 	err := row.Scan(&counter)
 
 	if err != nil {
@@ -34,8 +34,10 @@ func (s *CounterService) GetCounter() (*int, error) {
 // IncreaseCounter : Increases the counter by given number
 func (s *CounterService) IncreaseCounter(dto *string) error {
 
-	var increment *int = nil
-	json.Unmarshal([]byte(*dto), &increment)
+	increment, err := strconv.Atoi(*dto)
+	if err != nil {
+		return err
+	}
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
@@ -63,8 +65,10 @@ func (s *CounterService) IncreaseCounter(dto *string) error {
 // DecreaseCounter : Decreases the counter by given number
 func (s *CounterService) DecreaseCounter(dto *string) error {
 
-	var decrement *int = nil
-	json.Unmarshal([]byte(*dto), &decrement)
+	decrement, err := strconv.Atoi(*dto)
+	if err != nil {
+		return err
+	}
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
