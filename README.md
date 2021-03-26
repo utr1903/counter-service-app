@@ -38,13 +38,17 @@ To do that, simply type the following sql command: _create database counterdb_. 
 First, this repository has to be cloned with it's dependencies. For that, open up a command terminal and type _go get -u -v github.com/utr1903/counter-service-app_. The "-u" tag detects and downloads the dependencies and the "-v" tag logs the download processes to the console which makes easier to find errors.
 
 ## 5. Application structure
-The app is run through the main.go file. Both the database username and password have to be given as command line arguments in order to securely keep them out of the code & repository. To run the app,
+The app is run through the main.go file. Both the database username and password have to be given as environment variables in order to securely keep them out of the code & repository.
+
+To do that, you can refer to capital 2. The environment variables for username and password are "MYSQL_USERNAME" and "MYSQL_PASSWORD", respectively.
+
+To run the app,
 * Open up a terminal
 * Go to code directory
   * Linux: cd $GOPATH/github.com/utr1903/counter-service-app
   * Windows: cd %GOPATH%\github.com\utr1903\counter-service-app
 * type _go install_
-* type _go run main.go "username" "password"_
+* type _go run main.go_
 
 ### 5.1 main.go
 Simply the start of the application. It parses the database username and password. Creates an app object and runs it.
@@ -81,6 +85,4 @@ Decreases the counter by given value.
 
 #### 5.5.1 ResetCounter
 Resets the counter to zero.
-
-
 
