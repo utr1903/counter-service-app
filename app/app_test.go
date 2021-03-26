@@ -12,11 +12,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var dbUser string = "utr1903"
-var dbPass string = "utr1903"
-
 // InitDb : Initializes the Db connection
 func TestInitDb(t *testing.T) {
+
+	dbUser := os.Getenv("MYSQL_USERNAME")
+	dbPass := os.Getenv("MYSQL_PASSWORD")
 
 	connectionString := dbUser + ":" + dbPass + "@(127.0.0.1:3306)/counterdb?parseTime=true"
 

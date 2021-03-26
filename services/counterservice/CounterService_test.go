@@ -87,10 +87,11 @@ func TestResetCounter(t *testing.T) {
 	}
 }
 
-var dbUser string = "utr1903"
-var dbPass string = "utr1903"
-
 func initDb() *sql.DB {
+
+	dbUser := os.Getenv("MYSQL_USERNAME")
+	dbPass := os.Getenv("MYSQL_PASSWORD")
+
 	connectionString := dbUser + ":" + dbPass + "@(127.0.0.1:3306)/counterdb?parseTime=true"
 
 	db, err := sql.Open("mysql", connectionString)

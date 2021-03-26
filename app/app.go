@@ -23,9 +23,12 @@ type App struct {
 }
 
 // InitDb : Initializes the Db connection
-func (a *App) InitDb(dbUser *string, dbPass *string) {
+func (a *App) InitDb() {
 
-	connectionString := *dbUser + ":" + *dbPass + "@(127.0.0.1:3306)/counterdb?parseTime=true"
+	dbUser := os.Getenv("MYSQL_USERNAME")
+	dbPass := os.Getenv("MYSQL_PASSWORD")
+
+	connectionString := dbUser + ":" + dbPass + "@(127.0.0.1:3306)/counterdb?parseTime=true"
 
 	db, err := sql.Open("mysql", connectionString)
 	a.Db = db
