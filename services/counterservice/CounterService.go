@@ -12,17 +12,19 @@ import (
 
 // CounterService : Implementation of CounterService
 type CounterService struct {
-	Db *sql.DB
+	Db     *sql.DB
+	IsProd bool
 }
 
 // GetCounter : Returns the current value of counter
 func (s *CounterService) GetCounter() *models.CounterResponse {
 
-	q := "select counter from counterdb.counter where id = 1"
+	id := s.getCounterId()
+	q := "select counter from counterdb.counter where id = ?"
 
 	var counter *int = nil
 
-	row := s.Db.QueryRow(q)
+	row := s.Db.QueryRow(q, &id)
 	err := row.Scan(&counter)
 
 	if err != nil {
@@ -120,6 +122,14 @@ func (s *CounterService) ResetCounter() *models.CounterResponse {
 
 	ctr := 0
 	return createResponse(&ctr, http.StatusOK, nil)
+}
+
+func (s *CounterService) getCounterId() int {
+	if s.IsProd {
+		return 1
+	} else {
+		return 2
+	}
 }
 
 func createResponse(counter *int, code int, err error) *models.CounterResponse {

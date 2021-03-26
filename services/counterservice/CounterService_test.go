@@ -14,10 +14,7 @@ import (
 func TestGetCounter(t *testing.T) {
 
 	db := initDb()
-
-	s := &CounterService{
-		Db: db,
-	}
+	s := initService(db)
 
 	r := s.GetCounter()
 
@@ -33,10 +30,7 @@ func TestGetCounter(t *testing.T) {
 func TestIncreaseCounter(t *testing.T) {
 
 	db := initDb()
-
-	s := &CounterService{
-		Db: db,
-	}
+	s := initService(db)
 
 	inputs := []string{"1", "5", "x"}
 
@@ -58,10 +52,7 @@ func TestIncreaseCounter(t *testing.T) {
 func TestDecreaseCounter(t *testing.T) {
 
 	db := initDb()
-
-	s := &CounterService{
-		Db: db,
-	}
+	s := initService(db)
 
 	inputs := []string{"1", "5", "x"}
 
@@ -83,10 +74,7 @@ func TestDecreaseCounter(t *testing.T) {
 func TestResetCounter(t *testing.T) {
 
 	db := initDb()
-
-	s := &CounterService{
-		Db: db,
-	}
+	s := initService(db)
 
 	r := s.ResetCounter()
 
@@ -116,4 +104,11 @@ func initDb() *sql.DB {
 	}
 
 	return db
+}
+
+func initService(db *sql.DB) *CounterService {
+	return &CounterService{
+		Db:     db,
+		IsProd: false,
+	}
 }

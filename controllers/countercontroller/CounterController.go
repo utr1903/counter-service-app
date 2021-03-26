@@ -8,6 +8,8 @@ import (
 	"github.com/utr1903/counter-service-app/services/counterservice"
 )
 
+var isProd bool = true
+
 // CounterController : Controller for counter services
 type CounterController struct {
 	Base *controllers.ControllerBase
@@ -17,7 +19,8 @@ type CounterController struct {
 func (c *CounterController) GetCounter(w http.ResponseWriter, r *http.Request) {
 
 	s := &counterservice.CounterService{
-		Db: c.Base.Db,
+		Db:     c.Base.Db,
+		IsProd: isProd,
 	}
 
 	response := s.GetCounter()
@@ -42,7 +45,8 @@ func (c *CounterController) IncreaseCounter(w http.ResponseWriter, r *http.Reque
 	dto := c.Base.ParseRequestToString(&w, r)
 
 	s := &counterservice.CounterService{
-		Db: c.Base.Db,
+		Db:     c.Base.Db,
+		IsProd: isProd,
 	}
 
 	response := s.IncreaseCounter(dto)
@@ -67,7 +71,8 @@ func (c *CounterController) DecreaseCounter(w http.ResponseWriter, r *http.Reque
 	dto := c.Base.ParseRequestToString(&w, r)
 
 	s := &counterservice.CounterService{
-		Db: c.Base.Db,
+		Db:     c.Base.Db,
+		IsProd: isProd,
 	}
 
 	response := s.DecreaseCounter(dto)
@@ -90,7 +95,8 @@ func (c *CounterController) DecreaseCounter(w http.ResponseWriter, r *http.Reque
 func (c *CounterController) ResetCounter(w http.ResponseWriter, r *http.Request) {
 
 	s := &counterservice.CounterService{
-		Db: c.Base.Db,
+		Db:     c.Base.Db,
+		IsProd: isProd,
 	}
 
 	response := s.ResetCounter()
