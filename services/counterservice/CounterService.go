@@ -12,8 +12,7 @@ import (
 
 // CounterService : Implementation of CounterService
 type CounterService struct {
-	Req *http.Request
-	Db  *sql.DB
+	Db *sql.DB
 }
 
 // GetCounter : Returns the current value of counter

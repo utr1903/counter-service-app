@@ -17,8 +17,7 @@ type CounterController struct {
 func (c *CounterController) GetCounter(w http.ResponseWriter, r *http.Request) {
 
 	s := &counterservice.CounterService{
-		Req: r,
-		Db:  c.Base.Db,
+		Db: c.Base.Db,
 	}
 
 	response := s.GetCounter()
@@ -43,8 +42,7 @@ func (c *CounterController) IncreaseCounter(w http.ResponseWriter, r *http.Reque
 	dto := c.Base.ParseRequestToString(&w, r)
 
 	s := &counterservice.CounterService{
-		Req: r,
-		Db:  c.Base.Db,
+		Db: c.Base.Db,
 	}
 
 	response := s.IncreaseCounter(dto)
@@ -69,8 +67,7 @@ func (c *CounterController) DecreaseCounter(w http.ResponseWriter, r *http.Reque
 	dto := c.Base.ParseRequestToString(&w, r)
 
 	s := &counterservice.CounterService{
-		Req: r,
-		Db:  c.Base.Db,
+		Db: c.Base.Db,
 	}
 
 	response := s.DecreaseCounter(dto)
@@ -93,8 +90,7 @@ func (c *CounterController) DecreaseCounter(w http.ResponseWriter, r *http.Reque
 func (c *CounterController) ResetCounter(w http.ResponseWriter, r *http.Request) {
 
 	s := &counterservice.CounterService{
-		Req: r,
-		Db:  c.Base.Db,
+		Db: c.Base.Db,
 	}
 
 	response := s.ResetCounter()
